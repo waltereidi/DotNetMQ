@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotNetMQ.Controllers
+namespace DotNetMQ.Receive.Controllers
 {
     [ApiController]
     [Route("[controller]")]

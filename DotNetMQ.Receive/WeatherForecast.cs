@@ -1,4 +1,4 @@
-namespace DotNetMQ
+namespace DotNetMQ.Receive
 {
     public class WeatherForecast
     {
