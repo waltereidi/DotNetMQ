@@ -5,7 +5,11 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetMQ.Send", "DotNetMQ.Send\DotNetMQ.Send.csproj", "{C4A60794-D47A-4896-BCFB-BB0E3DFD132B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetMQ.Server", "DotNetMQ.Server\DotNetMQ.Server.csproj", "{F1F51C82-060D-4FB5-AA0B-CAF1E3D4395E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetMQ.Server", "DotNetMQ.Server\DotNetMQ.Server.csproj", "{F1F51C82-060D-4FB5-AA0B-CAF1E3D4395E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetMQ.RPCQueue", "DotNetMQ.RPCQueue\DotNetMQ.RPCQueue.csproj", "{7950F600-BE42-4620-96DB-957F22E0A7B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetMQ.RPCClient", "DotNetMQ.RPCClient\DotNetMQ.RPCClient.csproj", "{C50F761A-B6A6-4A19-9AF9-47A13DBDED05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{F1F51C82-060D-4FB5-AA0B-CAF1E3D4395E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1F51C82-060D-4FB5-AA0B-CAF1E3D4395E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1F51C82-060D-4FB5-AA0B-CAF1E3D4395E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7950F600-BE42-4620-96DB-957F22E0A7B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7950F600-BE42-4620-96DB-957F22E0A7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7950F600-BE42-4620-96DB-957F22E0A7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7950F600-BE42-4620-96DB-957F22E0A7B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C50F761A-B6A6-4A19-9AF9-47A13DBDED05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50F761A-B6A6-4A19-9AF9-47A13DBDED05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50F761A-B6A6-4A19-9AF9-47A13DBDED05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50F761A-B6A6-4A19-9AF9-47A13DBDED05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

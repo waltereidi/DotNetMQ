@@ -4,7 +4,6 @@ using System.Text;
 
 ConnectionFactory _factory = new ConnectionFactory { HostName = "localhost" };
 string _QUEUENAME = "UploadQueue";
-string _HOSTNAME = "https://localhost:5556";
 using var connection = _factory.CreateConnection();
 using var channel = connection.CreateModel();
 
