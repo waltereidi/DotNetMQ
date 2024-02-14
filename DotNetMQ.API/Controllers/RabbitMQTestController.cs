@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Threading.Channels;
 
 namespace DotNetMQ.Controllers
 {
@@ -55,10 +53,20 @@ namespace DotNetMQ.Controllers
             return Ok();
         }
         [HttpGet]
-        public async Task<IActionResult> GetRPCQueueMessages(int number)
+        public IActionResult SendRPCQueue(string message)
+        {
+            _rpcQueue.BasicPublish(exchange: string.Empty,
+                             routingKey: "RPCQueue",
+                             basicProperties: null,
+                             body: Encoding.UTF8.GetBytes(message)
+                             );
+            return Ok();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetRPCQueueMessages(string messageToRetrieve)
         {
             using var rpcClient = new RpcClient();
-            return Ok(await rpcClient.CallAsync("30"));
+            return Ok(await rpcClient.CallAsync(messageToRetrieve));
             
         }
     }

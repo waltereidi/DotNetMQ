@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 
 public class RpcClient : IDisposable
 {
-    private const string QUEUE_NAME = "rpc_queue";
+    private const string QUEUE_NAME = "RPCQueue";
 
     private readonly IConnection connection;
     private readonly IModel channel;
@@ -15,7 +15,6 @@ public class RpcClient : IDisposable
     public RpcClient()
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
-
         connection = factory.CreateConnection();
         channel = connection.CreateModel();
         // declare a server-named queue
@@ -64,20 +63,8 @@ public class Rpc
 {
     public static async Task Main(string[] args)
     {
-        Console.WriteLine("RPC Client");
-        string n = args.Length > 0 ? args[0] : "30";
-        await InvokeAsync(n);
-
+  
         Console.WriteLine(" Press [enter] to exit.");
         Console.ReadLine();
-    }
-
-    private static async Task InvokeAsync(string n)
-    {
-        using var rpcClient = new RpcClient();
-
-        Console.WriteLine(" [x] Requesting fib({0})", n);
-        var response = await rpcClient.CallAsync(n);
-        Console.WriteLine(" [.] Got '{0}'", response);
     }
 }
