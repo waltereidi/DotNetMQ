@@ -32,5 +32,6 @@ consumer.Received += (model, ea) =>
 };
 #endregion
 
+
 Console.WriteLine(" Press [enter] to exit.");
 Console.ReadLine();

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetMQ.RPCClient\DotNetMQ.RPCClient.csproj" />
+    <ProjectReference Include="..\DotNetMQ.RPCQueue\DotNetMQ.RPCQueue.csproj" />
   </ItemGroup>
 
 </Project>

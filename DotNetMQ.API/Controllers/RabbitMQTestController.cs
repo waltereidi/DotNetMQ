@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
 using System.Text;
+using System.Threading.Channels;
 
 namespace DotNetMQ.Controllers
 {
@@ -21,9 +22,10 @@ namespace DotNetMQ.Controllers
             //RabbitMQ sender setup
             var _factory = new ConnectionFactory();
             _connection = _factory.CreateConnection();
-            _rabbitMQueue = _connection.CreateModel();
+
 
             #region Normal Queue
+            _rabbitMQueue = _connection.CreateModel();
             _rabbitMQueue.QueueDeclare(queue: "UploadQueue",
                      durable: false,
                      exclusive: false,
@@ -55,11 +57,7 @@ namespace DotNetMQ.Controllers
         [HttpGet]
         public IActionResult SendRPCQueue(string message)
         {
-            _rpcQueue.BasicPublish(exchange: string.Empty,
-                             routingKey: "RPCQueue",
-                             basicProperties: null,
-                             body: Encoding.UTF8.GetBytes(message)
-                             );
+            RpcQueueServer.SendRpcQueue(message);
             return Ok();
         }
         [HttpGet]
