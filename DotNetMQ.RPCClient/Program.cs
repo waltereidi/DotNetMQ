@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 
 public class RpcClient : IDisposable
 {
-    private const string QUEUE_NAME = "RPCQueueClient";
+    private const string QUEUE_NAME = "RPCQueue";
 
     private readonly IConnection connection;
     private readonly IModel channel;
@@ -59,12 +59,4 @@ public class RpcClient : IDisposable
     }
 }
 
-public class Rpc
-{
-    public static async Task Main(string[] args)
-    {
-  
-        Console.WriteLine(" Press [enter] to exit.");
-        Console.ReadLine();
-    }
-}
+

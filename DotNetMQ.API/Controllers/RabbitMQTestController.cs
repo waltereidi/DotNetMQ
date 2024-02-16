@@ -16,7 +16,7 @@ namespace DotNetMQ.Controllers
         private readonly IModel _rabbitMQueue;
         private readonly IModel _rpcQueue;
         private readonly IConnection _connection;
-        public RabbitMQTestController(ILogger<RabbitMQTestController> logger)
+        public RabbitMQTestController(ILogger<RabbitMQTestController> logger , RpcQueueServer server)
         {
             _logger = logger;
             //RabbitMQ sender setup
@@ -55,9 +55,10 @@ namespace DotNetMQ.Controllers
             return Ok();
         }
         [HttpGet]
-        public IActionResult SendRPCQueue(string message)
+        public async Task<IActionResult> SendRPCQueue(string message)
         {
-            RpcQueueServer.SendRpcQueue(message);
+            RpcClient rpcClient = new RpcClient();
+            var task = await rpcClient.CallAsync(message);
             return Ok();
         }
         [HttpGet]
