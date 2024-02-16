@@ -16,7 +16,7 @@ namespace DotNetMQ.Controllers
         private readonly IModel _rabbitMQueue;
         private readonly IModel _rpcQueue;
         private readonly IConnection _connection;
-        public RabbitMQTestController(ILogger<RabbitMQTestController> logger , RpcQueueServer server)
+        public RabbitMQTestController(ILogger<RabbitMQTestController> logger)
         {
             _logger = logger;
             //RabbitMQ sender setup
@@ -31,16 +31,6 @@ namespace DotNetMQ.Controllers
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-            #endregion
-
-            #region RPC Queue
-            _rpcQueue = _connection.CreateModel();
-            _rpcQueue.QueueDeclare(queue: "RPCQueue",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
-            _rpcQueue.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
             #endregion
         }
 
@@ -59,14 +49,7 @@ namespace DotNetMQ.Controllers
         {
             RpcClient rpcClient = new RpcClient();
             var task = await rpcClient.CallAsync(message);
-            return Ok();
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetRPCQueueMessages(string messageToRetrieve)
-        {
-            using var rpcClient = new RpcClient();
-            return Ok(await rpcClient.CallAsync(messageToRetrieve));
-            
+            return Ok(task);
         }
     }
 }

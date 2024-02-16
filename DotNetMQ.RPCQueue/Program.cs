@@ -1,59 +1,69 @@
 ﻿using System.Text;
-using System.Threading.Channels;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
+var factory = new ConnectionFactory { HostName = "localhost" };
+int messageCount = 0;
+using var connection = factory.CreateConnection();
+using var channel = connection.CreateModel();
 
-public class RpcQueueServer
+channel.QueueDeclare(queue: "rpc_queue",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+var consumer = new EventingBasicConsumer(channel);
+channel.BasicConsume(queue: "rpc_queue",
+                     autoAck: false,
+                     consumer: consumer);
+Console.WriteLine(" [x] Awaiting RPC requests");
+
+consumer.Received += (model, ea) =>
 {
-    private  IModel channel { get; set; }
-    private  IBasicProperties replyProps { get; set; }
-    private  EventingBasicConsumer consumer { get; set; }
+    string response = string.Empty;
 
-    public RpcQueueServer()
+    var body = ea.Body.ToArray();
+    var props = ea.BasicProperties;
+    var replyProps = channel.CreateBasicProperties();
+    replyProps.CorrelationId = props.CorrelationId;
+
+    try
     {
-        //Queue parameters
-        var factory = new ConnectionFactory { HostName = "localhost" };
-        string QUEUENAME = "RPCQueue";
-
-        #region initialization
-        using var connection = factory.CreateConnection();
-        channel = connection.CreateModel();
-
-        channel.QueueDeclare(queue: "RPCQueue",
-                             durable: false,
-                             exclusive: false,
-                             autoDelete: false,
-                             arguments: null);
-        channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-        consumer = new EventingBasicConsumer(channel);
-        channel.BasicConsume(queue: "RPCQueue",
-                             autoAck: false,
-                             consumer: consumer);
-        #endregion
-
-        #region receive messages to send
-        consumer.Received += (model, ea) =>
-        {
-            string response = string.Empty;
-
-            var body = ea.Body.ToArray();
-            var props = ea.BasicProperties;
-            replyProps = channel.CreateBasicProperties();
-            replyProps.CorrelationId = props.CorrelationId;
-
-            replyProps = channel.CreateBasicProperties();
-            replyProps.CorrelationId = ea.BasicProperties.CorrelationId;
-
-            channel.BasicPublish(exchange: string.Empty,
-                                    routingKey: ea.BasicProperties.ReplyTo,
-                                    basicProperties: replyProps,
-                                    body: ea.Body
-                                    );
-            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-        };
-        #endregion
-
-
+        response = Encoding.UTF8.GetString(body);
+        Console.WriteLine($" [.] {response}");
+        //Do what ever you want with the response here
+        //
+        response += $" - Message number {messageCount++}";
     }
-}   
+    catch (Exception e)
+    {
+        Console.WriteLine($" [.] {e.Message}");
+        response = string.Empty;
+    }
+    finally
+    {
+        //Send back the response to the caller.
+        var responseBytes = Encoding.UTF8.GetBytes(response);
+        channel.BasicPublish(exchange: string.Empty,
+                             routingKey: props.ReplyTo,
+                             basicProperties: replyProps,
+                             body: responseBytes);
+        channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
+    }
+};
+
+Console.WriteLine(" Press [enter] to exit.");
+Console.ReadLine();
+
+// Assumes only valid positive integer input.
+// Don't expect this one to work for big numbers, and it's probably the slowest recursive implementation possible.
+static int Fib(int n)
+{
+    if (n is 0 or 1)
+    {
+        return n;
+    }
+
+    return Fib(n - 1) + Fib(n - 2);
+}

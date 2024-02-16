@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 
 public class RpcClient : IDisposable
 {
-    private const string QUEUE_NAME = "RPCQueue";
+    private const string QUEUE_NAME = "rpc_queue";
 
     private readonly IConnection connection;
     private readonly IModel channel;
@@ -44,11 +44,13 @@ public class RpcClient : IDisposable
         var tcs = new TaskCompletionSource<string>();
         callbackMapper.TryAdd(correlationId, tcs);
 
+        //Send the message to the queue so it can be processed
         channel.BasicPublish(exchange: string.Empty,
                              routingKey: QUEUE_NAME,
                              basicProperties: props,
                              body: messageBytes);
 
+        //Awaits the server response and returns it to the caller method.
         cancellationToken.Register(() => callbackMapper.TryRemove(correlationId, out _));
         return tcs.Task;
     }
